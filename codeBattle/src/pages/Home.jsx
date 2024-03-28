@@ -43,38 +43,45 @@ const Home = () => {
     };
 
     // Fonction pour supprimer un exercice
-    const handleDeleteExercise = () => {
-        const id = exercises[currentExerciseIndex].id;
-        fetch(`http://localhost:3000/exercises/${id}`, {
+    const handleDeleteExercise = async () => {
+        // faire un fetch DELETE à l'API pour supprimer l'exercice actuel
+        const req = await fetch(`http://localhost:3000/exercises/${exercises[currentExerciseIndex].id}`, {
             method: 'DELETE'
-        })
-    };
-    // Récupération de l'exercice actuel en fonction de l'index
-    const currentExercise = exercises[currentExerciseIndex];
+        });
+        // Si la requette est ok, on supprime l'exercice de la liste
+                if (req.ok) {
+                    const newDatas = exercises.filter((_, i) => i !== currentExerciseIndex);
+                    setExercises(newDatas);
+                }
+            }
 
-    // Rendu du composant
-    return (
-        <div>
-            {currentExercise && ( // Vérification si un exercice est actuellement sélectionné
+            // Récupération de l'exercice actuel en fonction de l'index
+            const currentExercise = exercises[currentExerciseIndex];
+
+            // Rendu du composant
+            return (
                 <div>
-                    <h1>{currentExercise.title}</h1>  {/*  Titre de l'exercice */}
-                    <p>{currentExercise.enonce}</p>   {/* Énoncé de l'exercice */}
+                    {currentExercise && ( // Vérification si un exercice est actuellement sélectionné
+                        <div>
+                            <h1>{currentExercise.title}</h1>  {/*  Titre de l'exercice */}
+                            <p>{currentExercise.enonce}</p>   {/* Énoncé de l'exercice */}
 
-                    {/* Bouton pour passer à l'exercice précédent */}
-                    <button onClick={handlePreviousExercise} disabled={currentExerciseIndex === 0}>
-                        Exercice Précédent
-                    </button>
-                    {/* Bouton pour passer à l'exercice suivant */}
-                    <button onClick={handleNextExercise} disabled={currentExerciseIndex === exercises.length - 1}>
-                        Exercice Suivant
-                    </button> 
-                    <button onClick={handleDeleteExercise}>Delete
-                    </button>
+                            {/* Bouton pour passer à l'exercice précédent */}
+                            <button onClick={handlePreviousExercise} disabled={currentExerciseIndex === 0}>
+                                Exercice Précédent
+                            </button>
+                            {/* Bouton pour passer à l'exercice suivant */}
+                            <button onClick={handleNextExercise} disabled={currentExerciseIndex === exercises.length - 1}>
+                                Exercice Suivant
+                            </button>
+                            {/* Bouton pour supprimer l'exercice actuel */}
+                            <button onClick={handleDeleteExercise}>
+                                Supprimer l'exercice
+                            </button>
+                        </div>
+                    )}
                 </div>
-            )}
-        </div>
-    );
-};
-
-// Export du composant Home pour qu'il puisse être utilisé ailleurs dans l'application
-export default Home;
+            );
+        };
+        // Export du composant Home pour qu'il puisse être utilisé ailleurs dans l'application
+        export default Home;

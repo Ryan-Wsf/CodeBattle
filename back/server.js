@@ -106,7 +106,7 @@ app.get('/exercises', async (req, res) => {
 
 // Route pour supprimer les exercices 
 
-app.get('/exercices/:id'), async (req, res) => {
+app.delete('/exercises/:id', async (req, res) => {
     const { id } = req.params
     const deletExerciceSql = `DELETE FROM exercises WHERE id = ?`
 
@@ -123,7 +123,7 @@ app.get('/exercices/:id'), async (req, res) => {
         console.log(err)
         res.status(500).json({ error : 'Internal server error' })
     }
-}
+})
 
 
 
